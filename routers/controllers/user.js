@@ -33,7 +33,7 @@ const resgister = async (req, res) => {
       res.json(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.json(err);
     });
 };
 
@@ -47,10 +47,12 @@ const login = (req, res) => {
       if (result) {
         if (result.email == email) {
           const savedPassword = await bcrypt.compare(password, result.password);
+          console.log(savedPassword);
           const payload = {
             role: result.role,
+            _id:result._id
           };
-          if (savedPassword) {
+          if (savedPassword == true) {
             let token = jwt.sign(payload, secret);
             res.status(200).json({ result, token });
           } else {
@@ -64,7 +66,8 @@ const login = (req, res) => {
       }
     })
     .catch((err) => {
-      res.send(err);
+      
+      res.send(err.message);
     });
 };
 
